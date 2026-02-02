@@ -27,32 +27,37 @@
 \begin{document}
 
 
-\title{情報処理学会研究報告の準備方法\\
-（2018年10月29日版）}
+\title{演習支援システム「サポちゃん」における\\
+管理者機能の開発と運用負担の軽減
+}
 
-\etitle{How to Prepare Your Paper for IPSJ SIG Technical Report \\ (version 2018/10/29)}
+\etitle{Development of Administrator Functions and Reduction of \\ Operational Burden in the Exercise Support System “Sapo-chan”}
 
-\affiliate{IPSJ}{情報処理学会\\
-IPSJ, Chiyoda, Tokyo 101--0062, Japan}
+\affiliate{KyusyuSangyoUniversityRS}{九州産業大学理工学部情報科学科\\
+Department of Information Science, Faculty of Science and Technology, Kyusyu Sangyo University, Fukuoka 813--8503, Japan}
+
+\affiliate{FukuokaWomensUniversity}{福岡女子大学国際文理学部環境科学科\\
+Department of Environmental Sciences, Faculty of International Arts and Sciences,  Fukuoka Women's University, Fukuoka 813--8529, Japan}
 
 
-\paffiliate{JU}{情報処理大学\\
-Johoshori Uniersity}
-
-\author{情報 太郎}{Joho Taro}{IPSJ}[joho.taro@ipsj.or.jp]
-\author{処理 花子}{Shori Hanako}{IPSJ}
-\author{学会 次郎}{Gakkai Jiro}{IPSJ,JU}[gakkai.jiro@ipsj.or.jp]
+\author{川口　諒}{Kawaguchi Ryo}{KyusyuSangyoUniversityRS}
+\author{神屋 郁子}{Kamiya Yuuko}{FukuokaWomensUniversity}
+\author{下川 俊彦}{Shimokawa Toshihiko}{KyusyuSangyoUniversityRS}
 
 \begin{abstract}
-本稿は，情報処理学会研究報告に投稿する原稿を執筆する際の注意点等をまとめたものである．
-\LaTeX と専用のスタイルファイルを用いた場合の論文フォーマットに関する指針，
-および論文の内容に関してするべきこと，
-するべきでないことをまとめたべからずチェックリストからなる．
-本稿自体も\LaTeX と専用のスタイルファイルを用いて執筆されているため，
-論文執筆の際に参考になれば幸いである．
+九州産業大学理工学部のプログラミング系科目では、受講生がPCで演習に取り組み、SA/TA・教員が提出状況を確認する形式の授業が行われている。
+我々の研究室ではこれを支援するシステム「サポちゃん」を開発してきたが、管理者向け機能が未整備で、データベースを直接操作する必要があり、運用負担やヒューマンエラーのリスクが課題であった。
+さらに、クォーター制への未対応や授業情報の一括登録不可、SA/TAが過去のチェックコメントを確認できない点などの問題もあった。
+そこで本研究では「サポちゃん2025」を開発し、管理者機能の拡充とこれらの運用上の課題を解決した。
+評価アンケートの結果、高い有効性が確認された。
 \end{abstract}
 
-
+\begin{eabstract}
+  In programming courses at Kyushu Sangyo University's Faculty of Science and Engineering, students complete exercises on PCs while SAs/TAs and instructors monitor submission status.
+  Our laboratory developed the “Sapo-chan” system to support this process, but its lack of administrator functions required direct database manipulation, posing operational burdens and risks of human error. 
+  Furthermore, issues included lack of support for the quarter system, inability to batch-register course information, and SAs/TAs being unable to review past check comments. 
+  Therefore, this research developed “Sapo-chan 2025,” enhancing administrator functions and resolving these operational challenges. Evaluation questionnaires confirmed its high effectiveness.
+\end{eabstract}
 %
 %\begin{jkeyword}
 %情報処理学会論文誌ジャーナル，\LaTeX，スタイルファイル，べからず集
