@@ -11,11 +11,23 @@
 
 
 
-\usepackage[dvips]{graphicx}
+\usepackage[dvipdfmx]{graphicx}
 \usepackage{latexsym}
 
 \usepackage{here}
 
+\newcommand{\maru}[1]{%
+  \leavevmode%
+  \begingroup%
+  \setbox0=\hbox{#1}%
+  \dimen0=\wd0%
+  \unitlength=1pt%
+  \begin{picture}(10,10)(0,2)%
+    \put(5,5){\circle{10}}%
+    \put(5,5){\makebox(0,0){\scalebox{0.75}{#1}}}%
+  \end{picture}%
+  \endgroup%
+}
 
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
@@ -83,20 +95,16 @@ Department of Environmental Sciences, Faculty of International Arts and Sciences
 %1
 \section{はじめに}
 九州産業大学理工学部のプログラミング系科目では,受講生がPCを用いて演習課題に取り組み,SA/TA・教員が提出状況や正誤を確認する形式の授業が行われている.
-これらの授業では,受講生の理解を促進するため,質問しやすい環境の整備と,SA/TA・教員による演習チェックの効率化が求められている.
-質問や演習チェックが円滑に行えない場合,受講生の理解不足や学習時間の損失につながる.
 
-我々の研究室では,これらを支援することを目的として,演習支援システム「サポちゃん」を開発している.
+我々の研究室では,このような授業を支援することを目的として,演習支援システム「サポちゃん」を開発している.
 サポちゃんは,質問や演習チェックの依頼をボタン操作で行える機能を備え,授業運営の効率化に寄与している.
 
 一方で,これまでの開発は受講生およびSA/TA・教員向け機能が中心であり,管理者向け機能が十分に整備されていない.
 そのため,授業情報の登録にはデータベースの直接操作が必要となり,専門的知識を要するうえ,作業負担やヒューマンエラーのリスクが高い.
-また,授業情報を事前に一括登録できないという課題もある.
-さらに,令和7年度から導入されたクォーター制に対し,サポちゃんはセメスター制を前提としており,制度変更に対応していない.
+その他にもSAやTA・教員用画面の機能不足,クォーター制への未対応,授業情報の一括登録不可など,運用上の課題が多く存在する.
 
-加えて,SA/TA・教員用画面では,過去のチェックコメントを確認できず,再提出時にも全体確認が必要となるほか,未提出と再提出要求の状態を区別できないため,演習状況を把握しにくいという問題がある.
-
-本研究の目的は,サポちゃんにおける管理者の運用負担を軽減し,クォーター制に対応させるとともに,SA/TA・教員用画面の課題を解決することである.
+そこで本研究では,サポちゃんにおける管理者の運用負担の軽減を目的とし,管理者機能を開発する。
+また、その他の運用上の課題を解決するために、機能を改良・新たに追加する.
 
 
 %2
@@ -238,13 +246,21 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
     なお,九州産業大学の統合認証システムに登録されているユーザーはLDAP認証を利用できるため,パスワード欄を空欄のまま登録可能である.
   \item[ユーザー編集機能]
     登録されているユーザー情報を編集する機能である.
-    ユーザーID,パスワード,氏名,ユーザータイプ,管理者権限の有無を更新できる.
+    ユーザーID,パスワード,ユーザー名,ユーザー名(カナ),ユーザータイプ,管理者権限の有無を更新できる.
     LDAP認証ユーザーについては,パスワード欄が空欄の状態でも更新が可能である.
   \item[ユーザー削除機能]
     指定したユーザーをシステムから削除する機能である.
   \item[ユーザー一覧表示機能]
-    各ユーザーのユーザーID,氏名,ユーザータイプ,管理者権限の有無を表示する機能である.
+    各ユーザーのユーザーID,ユーザー名,ユーザー名(カナ),ユーザータイプ,管理者権限の有無を表示する機能である.
     20名ごとにページネーションで切り替えて表示する.
+    ユーザー管理画面を図\ref{fig:yu-za-kannri}に示す.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[clip, width=\columnwidth, keepaspectratio]{img/yu-za-kannri.png}
+      \caption{ユーザー管理画面}
+      \ecaption{User Management Page}
+      \label{fig:yu-za-kannri}
+    \end{figure}
   \item[ユーザー検索機能]
     ユーザーID,ユーザー名,ユーザー名(カナ)を用いた部分一致検索を行う機能である.
   \item[教員登録機能]
@@ -256,7 +272,15 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
     未登録の学生が含まれる場合は,自動的にユーザー登録も行われる.
   \item[受講生一覧表示機能]
     科目ごとの受講生を一覧表示する機能である.
-    ユーザーID,氏名を表示し,20名ごとにページネーションで切り替えて表示する.
+    ユーザーID,ユーザー名,ユーザー名(カナ)を表示し,20名ごとにページネーションで切り替えて表示する.
+    受講生編集画面を図\ref{fig:zyukouseihennsyuu}に示す.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[clip, width=\columnwidth, keepaspectratio]{img/zyukouseihennsyuu.png}
+      \caption{受講生編集画面}
+      \ecaption{Student Edit Page}
+      \label{fig:zyukouseihennsyuu}
+    \end{figure}
   \item[受講生解除機能]
     科目に対する受講生の割り当てを解除する機能である.
   \item[担当SA/TA割り当て機能]
@@ -275,6 +299,14 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
     手動で各項目（科目名,教員,年度,教室,曜日・時限・クォーターの2組）を入力する「個別登録」と,CSV/Excelを用いる「一括登録」を選択できる.
   \item[科目一覧表示機能]
     科目名,教員名,教室,年度,開講時間（曜日と時限の組み合わせ）,クォーターを表示する.
+    科目管理画面を図\ref{fig:kamokukannri}に示す.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[clip, width=\columnwidth, keepaspectratio]{img/kamokukannri.png}
+      \caption{科目管理画面}
+      \ecaption{Subject Management Page}
+      \label{fig:kamokukannri}
+    \end{figure}
   \item[科目編集機能]
     登録済み科目の基本情報や開講枠の情報を編集する.
   \item[科目削除機能]
@@ -288,6 +320,14 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
     演習項目が複数ある場合はコンマ区切りで登録可能である.
   \item[授業一覧表示機能]
     授業回,日付,内容,演習項目を一覧で表示する.
+    授業・演習管理画面を図\ref{fig:zyugyoukannri}に示す.
+      \begin{figure}[H]
+      \centering
+      \includegraphics[clip, width=\columnwidth, keepaspectratio]{img/zyugyoukannri.png}
+      \caption{授業・演習管理画面}
+      \ecaption{Class and Exercise Management Page}
+      \label{fig:zyugyoukannri}
+    \end{figure}
   \item[授業編集機能]
     登録されている授業の詳細情報を更新する.
   \item[授業削除機能]
@@ -299,6 +339,15 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
   \item[チェックコメント一覧表示機能]
     演習チェック画面において,過去のコメント履歴を表示する機能である.
     過去の指導内容を確認しながら効率的にチェックを行える.
+    演習チェック画面を図\ref{fig:ensyuucheck}に示す.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[clip, width=\columnwidth, keepaspectratio]{img/ensyuucheck.png}
+      \caption{演習チェック画面}
+      \ecaption{Exercise Check Page}
+      \label{fig:ensyuucheck}
+    \end{figure}
+
   \item[提出状況表示機能]
     受講生の演習提出状況を座席表の色で識別する機能である.
     未提出と「少なくとも一度提出がある状態」を視覚的に分けることで,進捗を直感的に把握できる.
@@ -313,12 +362,12 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
 
 \section{サポちゃん2025の実装}
 
-\subsection{実装環境}
 サポちゃん2025の実装環境を表\ref{tb:zissoukankyou}に示す.
 
 \begin{table}[H]
   \centering
   \caption{実装環境}
+  \ecaption{Implementation Environment}
   \begin{tabular}{|l|l|l|}\hline
     \multicolumn{1}{|c|}{用途} & \multicolumn{1}{c|}{名称} & \multicolumn{1}{c|}{バージョン}\\ \hline\hline
     仮想化ソフトウェア &  Docker & 27.3.1  \\ \hline
@@ -329,7 +378,6 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
   \end{tabular}
   \label{tb:zissoukankyou}
 \end{table}
-
 
 \section{評価}
 以下で評価方法,評価結果,考察について述べる.
@@ -349,6 +397,7 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
 \begin{table}[H]
   \centering
   \caption{評価内容と対象者}
+  \ecaption{Evaluation Content and Target Users}
   \begin{tabular}{|p{3cm}|p{5cm}|}\hline
     \multicolumn{1}{|c|}{評価内容} & \multicolumn{1}{c|}{対象者}  \\ \hline\hline
     管理者機能の評価
@@ -367,7 +416,6 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
   \label{tb:hyouka}
 \end{table}
 
-\subsection{評価結果}
 管理者機能の評価については,従来の管理作業と比較した負担軽減の観点からアンケートを実施した.
 
 また,SA/TA用の機能の評価については,演習チェック作業の負担軽減や各受講生における演習状況の把握のしやすさといった観点からアンケートを実施した.
@@ -379,19 +427,20 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
 これまでTeamsで行っていた演習チェックや挙手での質問方法と比較した利便性などの観点からアンケートを実施した.
 
 
-\section{評価結果}\label{sec:hyoukaresult}
+\subsection{評価結果}\label{sec:hyoukaresult}
 以下に各アンケートの評価結果を示す.
 自由記述の回答は一部を要約して掲載する.
 なお,括弧内の数字は,各回答者が選択した選択肢を示している.
 また,一部の回答の明らかな誤字・脱字は修正して掲載している.
 
-\subsection{管理者機能の評価結果}
+\subsubsection{管理者機能の評価結果}
 3名から回答があった.
 管理者機能の評価アンケートの結果を表\ref{tb:kanrisya}に示す.
 
 \begin{table}[H]
   \centering
   \caption{管理者機能の評価結果}
+  \ecaption{Evaluation Results of Administrator Functions}
   \begin{tabular}{|p{7cm}|c|}\hline
     \multicolumn{1}{|c|}{アンケート項目} & \multicolumn{1}{c|}{平均}  \\ \hline\hline
     Q1.科目・授業・演習管理画面を使用することで,科目・授業・演習管理の負担が軽減された.
@@ -427,7 +476,7 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
     \item 「Q6.Q5の解答について,理由を教えてください」への回答
     \begin{itemize}
         \item SA/TAの追加やメンバーの削除時などにDBを直接見て編集する必要がなくなったから.(5)
-        \item SA/TAを登録する際に,学籍番号や氏名で検索でき,視覚的にわかりやすくて楽(5)
+        \item SA/TAを登録する際に,ユーザーIDユーザー名で検索でき,視覚的にわかりやすくて楽(5)
     \end{itemize}
     \item 「Q8.Q7の解答について,理由を教えてください」への回答
     \begin{itemize}
@@ -446,13 +495,14 @@ SA/TA・教員は,受講生からの依頼に対してチェック結果を登�
     \end{itemize}
 \end{itemize}
 
-\subsection{SA/TA・教員用画面の改善内容の評価結果}
+\subsubsection{SA/TA・教員用画面の改善内容の評価結果}
 8名から回答があった.
 SA/TA・教員用画面の改善内容の評価アンケートの結果を表\ref{tb:sata}に示す.
 
 \begin{table}[H]
   \centering
   \caption{SA/TA・教員用画面の改善内容の評価結果}
+  \ecaption{Evaluation Results of SA/TA and Instructor Screen Improvements}
   \begin{tabular}{|p{7cm}|c|}\hline
     \multicolumn{1}{|c|}{アンケート項目} & \multicolumn{1}{c|}{平均}  \\ \hline\hline
     Q1.過去のチェックコメントを確認できるようになったことで,演習チェックの負担が軽減された.
@@ -464,7 +514,6 @@ SA/TA・教員用画面の改善内容の評価アンケートの結果を表\re
   \end{tabular}
   \label{tb:sata}
 \end{table}
-
 
 \begin{itemize}
     \item 「Q2.Q1の解答について,理由を教えてください」への回答
@@ -479,12 +528,13 @@ SA/TA・教員用画面の改善内容の評価アンケートの結果を表\re
     \end{itemize}
 \end{itemize}
 
-\subsection{システム全体の評価結果}
+\subsubsection{システム全体の評価結果}
 3名から回答があった.
 システム全体の評価アンケートの結果を表\ref{tb:zentai}に示す.
 \begin{table}[H]
   \centering
   \caption{システム全体の評価結果}
+  \ecaption{Evaluation Results of the Entire System}
   \begin{tabular}{|p{5cm}|c|}\hline
     \multicolumn{1}{|c|}{アンケート項目} & \multicolumn{1}{c|}{平均}  \\ \hline\hline
     Q1.画面の構成は分かりやすい.
@@ -530,12 +580,13 @@ SA/TA・教員用画面の改善内容の評価アンケートの結果を表\re
     \end{itemize}
 \end{itemize}
 
-\subsection{受講生用画面の評価結果}
+\subsubsection{受講生用画面の評価結果}
 20名から回答があった.また,うち9名がサポちゃんを使って質問したと回答した.
 受講生用画面の評価アンケートの結果を表\ref{tb:zyukousei}に示す.
 \begin{table}[H]
   \centering
   \caption{受講生用画面の評価結果}
+  \ecaption{Evaluation Results of Student Screen}
   \begin{tabular}{|p{7cm}|c|}\hline
     \multicolumn{1}{|c|}{アンケート項目} & \multicolumn{1}{c|}{平均}  \\ \hline\hline
     Q1.演習チェック依頼はTeamsと比べてしやすくなった.
@@ -572,7 +623,7 @@ SA/TA・教員用画面の改善内容の評価アンケートの結果を表\re
         \item とても便利で使いやすかったです.
     \end{itemize}
 \end{itemize}
-\section{考察}\label{sec:kousatsu}
+\subsection{考察}\label{sec:kousatsu}
 評価アンケート結果について,以下に考察を述べる.
 
 管理者機能の評価結果については,全ての設問で平均5.0という非常に高い評価を得ることができた.
@@ -600,11 +651,7 @@ SA/TA・教員用画面の改善内容の評価結果については,どちら�
 ただし,いくつかの改善点や要望も明らかになったため,今後のシステム改善においてこれらの点を考慮する必要がある.
 
 \section{おわりに}
-九州産業大学理工学部のプログラミング系科目では,PC を用いた演習課題に対し,SA/TA・教員が提出状況や正誤を確認する形式の授業が行われており,我々の研究室ではこれを支援するシステム「サポちゃん」を開発している.
-しかし従来のサポちゃんは管理者向け機能が十分に整備されておらず,授業情報をデータベースへ直接登録する必要があるなど,管理者の作業負担が大きいという課題があった.
-また,授業情報の事前一括登録ができない点や,令和7年度から導入されたクォーター制に対応していない点,さらに SA/TA・教員用画面において過去のチェックコメントの確認や未提出・提出済みの判別ができない点も課題であった.
-
-本研究ではこれらの課題を解決するため「サポちゃん2025」を開発し,管理者向け Web UI の実装,CSV・Excel による授業情報の一括登録,クォーター制への対応,SA/TA・教員用画面の機能改善を行った.評価実験の結果,各利用者から高い評価を得ており,管理者および利用者の負担軽減と利便性向上が確認された.
+本研究では既存のサポちゃんの課題を解決するため「サポちゃん2025」を開発し,管理者向け Web UI の実装,CSV・Excel による授業情報の一括登録,クォーター制への対応,SA/TA・教員用画面の機能改善を行った.評価実験の結果,各利用者から高い評価を得ており,管理者および利用者の負担軽減と利便性向上が確認された.
 
 一方,今後の課題として管理者機能のスマートフォン対応と管理者権限の細分化が挙げられる.
 スマートフォン向け UI を開発することで管理者の利便性向上が期待される.
