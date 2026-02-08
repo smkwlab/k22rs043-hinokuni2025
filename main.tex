@@ -16,19 +16,6 @@
 
 \usepackage{here}
 
-\newcommand{\maru}[1]{%
-  \leavevmode%
-  \begingroup%
-  \setbox0=\hbox{#1}%
-  \dimen0=\wd0%
-  \unitlength=1pt%
-  \begin{picture}（10,10）（0,2）%
-    \put（5,5）{\circle{10}}%
-    \put（5,5）{\makebox（0,0）{\scalebox{0.75}{#1}}}%
-  \end{picture}%
-  \endgroup%
-}
-
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
 \def\|{\verb|}
@@ -49,13 +36,13 @@
 \etitle{Development of Administrator Functions and Reduction of \\ Operational Burden in the Exercise Support System “Sapo-chan”}
 
 \affiliate{KyusyuSangyoUniversityRS}{九州産業大学理工学部情報科学科\\
-Department of Information Science, Faculty of Science and Technology, Kyusyu Sangyo University, Fukuoka 813--8503, Japan}
+Department of Information Science, Faculty of Science and Technology, Kyushu Sangyo University, Fukuoka 813--8503, Japan}
 
 \affiliate{FukuokaWomensUniversity}{福岡女子大学国際文理学部環境科学科\\
 Department of Environmental Sciences, Faculty of International Arts and Sciences,  Fukuoka Women's University, Fukuoka 813--8529, Japan}
 
 
-\author{川口　諒}{Kawaguchi Ryo}{KyusyuSangyoUniversityRS}
+\author{川口 諒}{Kawaguchi Ryo}{KyusyuSangyoUniversityRS}
 \author{神屋 郁子}{Kamiya Yuuko}{FukuokaWomensUniversity}
 \author{下川 俊彦}{Shimokawa Toshihiko}{KyusyuSangyoUniversityRS}
 
@@ -99,12 +86,12 @@ Department of Environmental Sciences, Faculty of International Arts and Sciences
 我々の研究室では，このような授業を支援することを目的として，演習支援システム「サポちゃん」を開発している．
 サポちゃんは，質問や演習チェックの依頼をボタン操作で行える機能を備え，授業運営の効率化に寄与している．
 
-一方で，これまでの開発は受講生およびSA/TA・教員向け機能が中心であり，管理者向け機能が十分に整備されていない．
-そのため，授業情報の登録にはデータベースの直接操作が必要となり，専門的知識を要するうえ，作業負担やヒューマンエラーのリスクが高い．
-その他にもSAやTA・教員用画面の機能不足，クォーター制への未対応，授業情報の一括登録不可など，運用上の課題が多く存在する．
+一方で，これまでの開発は受講生およびSA/TA・教員向け機能が中心であり，管理者向け機能が十分に整備されていなかった．
+そのため，授業情報の登録にはデータベースの直接操作が必要となり，専門的知識を要するうえ，作業負担やヒューマンエラーのリスクが高かった．
+その他にもSA/TA・教員用画面の機能不足，クォーター制への未対応，授業情報の一括登録不可など，運用上の課題が多く存在した．
 
-そこで本研究では，サポちゃんにおける管理者の運用負担の軽減を目的とし，管理者機能を開発する．
-また，その他の運用上の課題を解決するために，機能を改良・新たに追加する．
+そこで本研究では，サポちゃんにおける管理者の運用負担の軽減を目的とし，管理者機能を開発した．
+また，その他の運用上の課題を解決するために，機能の改良および新規追加を行った．
 
 
 %2
@@ -182,13 +169,13 @@ SA/TA・教員は，受講生からの依頼に対してチェック結果を登
 
 \section{サポちゃん2025の設計}
 本研究で開発するシステムを「サポちゃん2025」と命名する．
-サポちゃん2025における要件定義，機能一覧，について以下で述べる．
+サポちゃん2025における要件定義について以下で述べる．
 
 \subsection{要件定義}\label{sec:youken}
 \ref{sec:problems}で述べた問題点を解決するために，サポちゃん2025で追加する要件を以下に示す．
 ここで，ユーザーとはサポちゃんを利用する教員および学生を指す．
- 科目とはシラバスに登録されるもので，複数回の授業で構成されるものを指す．
- 授業とは時間割の一コマ分の時間のことを指す．
+科目とはシラバスに登録されるもので，複数回の授業で構成されるものを指す．
+授業とは時間割の一コマ分の時間のことを指す．
 
 \begin{itemize}
     \item システム全体
@@ -405,7 +392,7 @@ SA/TA・教員は，受講生からの依頼に対してチェック結果を登
        \\ \hline
     SA/TA用機能の改善点の評価
       & 過去にSA/TAとしてサポちゃんを利用した経験のある者
-      　\\ \hline
+      \\ \hline
     システム全体の評価
       & 教員
        \\ \hline
@@ -568,7 +555,7 @@ SA/TA・教員用画面の改善内容の評価アンケートの結果を表\re
     \begin{itemize}
         \item 作業が簡単になったとしても作業自体は存在するので，それを上回るメリットがあれば検討したい．（3）
         \item 教員側は誰が演習がまだ終わっていないのかが視覚的に確認しやすいので良いと思う．
-        また，手を挙げて質問しずらい子の質問にも気づきやすくなるので，学生側の評判も確認しながら細かい部分で機能が改善されるようであれば今後の授業でも使ってみたい．（4）
+        また，手を挙げて質問しづらい子の質問にも気づきやすくなるので，学生側の評判も確認しながら細かい部分で機能が改善されるようであれば今後の授業でも使ってみたい．（4）
         \item 便利だから．（5）
     \end{itemize}
     \item 「Q7．その他ご意見などがあればお願いします．」への回答
